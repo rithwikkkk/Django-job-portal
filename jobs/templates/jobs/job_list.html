@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Job Portal</title>
+</head>
+<body>
+
+    <h1>Available Jobs</h1>
+
+    {% if user.is_authenticated %}
+        <p>
+            Logged in as <strong>{{ user.username }}</strong>
+            |
+            <a href="/accounts/logout/">Logout</a>
+        </p>
+    {% else %}
+        <p>
+            <a href="/accounts/login/">Login</a> |
+            <a href="/accounts/signup/">Signup</a>
+        </p>
+    {% endif %}
+
+    <hr>
+
+    {% for job in jobs %}
+        <h3>{{ job.title }}</h3>
+        <p><strong>Location:</strong> {{ job.location }}</p>
+        <p><strong>Salary:</strong> ₹{{ job.salary }}</p>
+        <p>{{ job.description }}</p>
+
+        {#  APPLY BUTTON — ONLY FOR JOB SEEKERS #}
+        {% if user.is_authenticated and user.profile.role == 'seeker' %}
+            <a href="{% url 'apply_job' job.id %}">Apply</a>
+        {% endif %}
+
+        <hr>
+    {% empty %}
+        <p>No jobs available</p>
+    {% endfor %}
+
+</body>
+</html>
