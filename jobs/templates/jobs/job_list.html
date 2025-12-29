@@ -13,6 +13,7 @@
 </p>
 
 {% if user.profile.role == "recruiter" %}
+<a href="{% url 'create_job'%}" ➕ Create Job</a>
     <p>
         <a href="{% url 'create_job' %}">➕ Create New Job</a>
     </p>
