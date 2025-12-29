@@ -1,18 +1,19 @@
-from django.shortcuts import render, redirect
-from .forms import SignUpForm
+from django.shortcuts import redirect
+from django.contrib.auth import login, authenticate
 
-def signup(request):
-    if request.method == 'POST':
-        form = SignUpForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            user.profile.role = form.cleaned_data['role']
-            user.profile.save()
-            return redirect('login')
-    else:
-        form = SignUpForm()
+def login_view(request):
+    if request.method == "POST":
+        username = request.POST["username"]
+        password = request.POST["password"]
 
-    return render(request, 'accounts/signup.html', {'form': form})
+        user = authenticate(request, username=username, password=password)
+        if user:
+            login(request, user)
 
+            # ROLE BASED REDIRECT
+            if user.profile.role == "recruiter":
+                return redirect("create_job")
+            else:
+                return redirect("job_list")
 
-# Create your views here.
+    return render(request, "accounts/login.html")
